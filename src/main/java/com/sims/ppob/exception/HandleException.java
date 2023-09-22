@@ -25,7 +25,7 @@ public class HandleException {
     public ResponseEntity<WebResponse<String>> apiException(ResponseStatusException exception) {
         return ResponseEntity.status(exception.getStatusCode())
                 .body(WebResponse.<String>builder()
-                        .status(108)
+                        .status(exception.getStatusCode() == HttpStatus.UNAUTHORIZED ? 108 : exception.getStatusCode().value())
                         .message(exception.getReason()).build());
     }
 

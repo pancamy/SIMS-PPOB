@@ -27,6 +27,10 @@ public class UserRepositoryImpl implements UserRepository {
             + " FROM users"
             + " WHERE id = ?";
 
+    private static final String UPDATE_USERS_SQL = "UPDATE users"
+            + " SET first_name = ?, last_name = ?"
+            + " WHERE id = ?";
+
     public void save(Users users) {
         try (Connection connection = DbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USERS_SQL)) {
@@ -99,6 +103,24 @@ public class UserRepositoryImpl implements UserRepository {
                 user.setCreatedAt(resultSet.getTimestamp("created_at").toLocalDateTime());
                 user.setUpdatedAt(resultSet.getTimestamp("updated_at").toLocalDateTime());
             }
+
+            return user;
+        } catch (SQLException e) {
+            ExceptionRepository.printSQLException(e);
+
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    @Override
+    public Users update(Users user) {
+        try (Connection connection = DbConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USERS_SQL)) {
+            preparedStatement.setString(1, user.getFirstName());
+            preparedStatement.setString(2, user.getLastName());
+            preparedStatement.setString(3, user.getId());
+
+            preparedStatement.executeUpdate();
 
             return user;
         } catch (SQLException e) {

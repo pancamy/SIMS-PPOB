@@ -1,10 +1,7 @@
 package com.sims.ppob.service;
 
 import com.sims.ppob.entity.Users;
-import com.sims.ppob.model.UserLoginRequest;
-import com.sims.ppob.model.UserLoginResponse;
-import com.sims.ppob.model.UserRegisterRequest;
-import com.sims.ppob.model.UserResponse;
+import com.sims.ppob.model.*;
 import org.springframework.validation.BindingResult;
 
 public interface UserService {
@@ -13,5 +10,7 @@ public interface UserService {
 
     UserLoginResponse login(UserLoginRequest request, BindingResult bindingResult);
 
-    UserResponse getProfile(Users user);
+    UserResponse profile(Users user);
+
+    UserResponse update(Users user, UserUpdateRequest request, BindingResult bindingResult);
 }

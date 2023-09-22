@@ -16,8 +16,8 @@ public class UserControllerImpl implements UserController{
     private UserService userService;
 
     @Override
-    public ResponseEntity<WebResponse<UserResponse>> registration(UserRegisterRequest request, BindingResult binding) {
-        userService.registration(request, binding);
+    public ResponseEntity<WebResponse<UserResponse>> registration(UserRegisterRequest request, BindingResult bindingResult) {
+        userService.registration(request, bindingResult);
 
         WebResponse<UserResponse> webResponse = WebResponse.<UserResponse>builder()
                 .status(0)
@@ -28,8 +28,8 @@ public class UserControllerImpl implements UserController{
     }
 
     @Override
-    public ResponseEntity<WebResponse<UserLoginResponse>> login(UserLoginRequest request, BindingResult binding) {
-        UserLoginResponse userLoginResponse = userService.login(request, binding);
+    public ResponseEntity<WebResponse<UserLoginResponse>> login(UserLoginRequest request, BindingResult bindingResult) {
+        UserLoginResponse userLoginResponse = userService.login(request, bindingResult);
 
         WebResponse<UserLoginResponse> webResponse = WebResponse.<UserLoginResponse>builder()
                 .status(0)
@@ -42,11 +42,24 @@ public class UserControllerImpl implements UserController{
 
     @Override
     public ResponseEntity<WebResponse<UserResponse>> profile(Users user) {
-        UserResponse userResponse = userService.getProfile(user);
+        UserResponse userResponse = userService.profile(user);
 
         WebResponse<UserResponse> webResponse = WebResponse.<UserResponse>builder()
                 .status(0)
                 .message("Sukses")
+                .data(userResponse)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(webResponse);
+    }
+
+    @Override
+    public ResponseEntity<WebResponse<UserResponse>> update(Users user, UserUpdateRequest request, BindingResult bindingResult) {
+        UserResponse userResponse = userService.update(user, request, bindingResult);
+
+        WebResponse<UserResponse> webResponse = WebResponse.<UserResponse>builder()
+                .status(0)
+                .message("Update Pofile berhasil")
                 .data(userResponse)
                 .build();
 

@@ -1,10 +1,7 @@
 package com.sims.ppob.service;
 
 import com.sims.ppob.entity.Users;
-import com.sims.ppob.model.UserLoginRequest;
-import com.sims.ppob.model.UserLoginResponse;
-import com.sims.ppob.model.UserRegisterRequest;
-import com.sims.ppob.model.UserResponse;
+import com.sims.ppob.model.*;
 import com.sims.ppob.repository.UserRepository;
 import com.sims.ppob.utility.Model;
 import com.sims.ppob.utility.Token;
@@ -84,7 +81,19 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserResponse getProfile(Users user) {
+    public UserResponse profile(Users user) {
         return model.toUserResponse(user);
+    }
+
+    @Override
+    public UserResponse update(Users user, UserUpdateRequest request, BindingResult bindingResult) {
+        ValidationService.validate(bindingResult);
+
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+
+        Users userUpdate = userRepository.update(user);
+
+        return model.toUserResponse(userUpdate);
     }
 }

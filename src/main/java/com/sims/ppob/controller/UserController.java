@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 public interface UserController {
@@ -18,7 +19,7 @@ public interface UserController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     ResponseEntity<WebResponse<UserResponse>> registration(@Valid @RequestBody UserRegisterRequest request,
-                                                           BindingResult binding);
+                                                           BindingResult bindingResult);
 
     @PostMapping(
             path = "/login",
@@ -26,11 +27,19 @@ public interface UserController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     ResponseEntity<WebResponse<UserLoginResponse>> login(@Valid @RequestBody UserLoginRequest request,
-                                                         BindingResult binding);
+                                                         BindingResult bindingResult);
 
     @GetMapping(
             path = "/profile",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     ResponseEntity<WebResponse<UserResponse>> profile(Users user);
+
+    @PutMapping(
+            path = "/profile/update",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    ResponseEntity<WebResponse<UserResponse>> update(Users user, @Valid @RequestBody UserUpdateRequest request,
+                                                     BindingResult bindingResult);
 }

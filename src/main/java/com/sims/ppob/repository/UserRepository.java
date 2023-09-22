@@ -9,4 +9,6 @@ public interface UserRepository {
     Users login(String email);
 
     Users getById(String id);
+
+    Users update(Users user);
 }
