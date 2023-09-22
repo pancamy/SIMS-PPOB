@@ -15,7 +15,7 @@ public class HandleException {
     public ResponseEntity<WebResponse<?>> handleException(Exception ex) {
         WebResponse<?> response = WebResponse.builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .message("Please contact administrator")
+                .message(ex.getMessage())
                 .build();
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);

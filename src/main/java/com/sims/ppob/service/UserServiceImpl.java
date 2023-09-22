@@ -1,36 +1,48 @@
 package com.sims.ppob.service;
 
 import com.sims.ppob.entity.Users;
+import com.sims.ppob.model.UserLoginRequest;
+import com.sims.ppob.model.UserLoginResponse;
+import com.sims.ppob.model.UserRegisterRequest;
 import com.sims.ppob.model.UserResponse;
-import com.sims.ppob.model.UserSaveRequest;
 import com.sims.ppob.repository.UserRepository;
 import com.sims.ppob.utility.Model;
+import com.sims.ppob.utility.Token;
 import jakarta.transaction.Transactional;
-import org.apache.catalina.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService{
 
     private final LocalDateTime newDate = LocalDateTime.now();
 
-    @Autowired
-    private Model model;
+    private final Token token;
+
+    private final Model model;
+
+    private final UserRepository userRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    public UserServiceImpl(Token token, Model model, UserRepository userRepository) {
+        this.token = token;
+        this.model = model;
+        this.userRepository = userRepository;
+    }
 
     @Override
     @Transactional
-    public UserResponse save(Users users, UserSaveRequest request, BindingResult bindingResult) {
+    public UserResponse registration(UserRegisterRequest request, BindingResult bindingResult) {
         ValidationService.validate(bindingResult);
 
         Users user = new Users();
@@ -42,8 +54,31 @@ public class UserServiceImpl implements UserService{
         user.setCreatedAt(newDate);
         user.setUpdatedAt(newDate);
 
-        userRepository.insertQuery(user);
+        userRepository.save(user);
 
         return model.toUserResponse(user);
+    }
+
+    @Override
+    public UserLoginResponse login(UserLoginRequest request, BindingResult bindingResult) {
+        ValidationService.validate(bindingResult);
+
+        Users user = userRepository.login(request.getEmail());
+        if (user.getId() == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email atau password salah");
+        }
+
+        boolean checkPassword = BCrypt.checkpw(request.getPassword(), user.getPassword());
+        if(!checkPassword){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email atau password salah");
+        }
+
+        Date now = new Date();
+        long accessTokenExpirationTimeInMillis = 10 * 60 * 1000;
+
+        Date accessTokenExpirationDate = new Date(now.getTime() + accessTokenExpirationTimeInMillis);
+        String accessToken = token.getToken(user.getId(), accessTokenExpirationDate);
+
+        return model.toUserLoginResponse(accessToken);
     }
 }

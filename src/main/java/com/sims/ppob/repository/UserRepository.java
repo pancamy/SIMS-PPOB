@@ -4,5 +4,7 @@ import com.sims.ppob.entity.Users;
 
 public interface UserRepository {
 
-    void insertQuery(Users users);
+    void save(Users users);
+
+    Users login(String email);
 }
