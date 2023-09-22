@@ -32,5 +32,5 @@ public interface UserController {
             path = "/profile",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    ResponseEntity<WebResponse<UserLoginResponse>> profile(Users users);
+    ResponseEntity<WebResponse<UserResponse>> profile(Users user);
 }

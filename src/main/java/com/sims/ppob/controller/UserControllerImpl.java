@@ -41,10 +41,13 @@ public class UserControllerImpl implements UserController{
     }
 
     @Override
-    public ResponseEntity<WebResponse<UserLoginResponse>> profile(Users users) {
-        WebResponse<UserLoginResponse> webResponse = WebResponse.<UserLoginResponse>builder()
+    public ResponseEntity<WebResponse<UserResponse>> profile(Users user) {
+        UserResponse userResponse = userService.getProfile(user);
+
+        WebResponse<UserResponse> webResponse = WebResponse.<UserResponse>builder()
                 .status(0)
-                .message("Login Sukses")
+                .message("Sukses")
+                .data(userResponse)
                 .build();
 
         return ResponseEntity.status(HttpStatus.OK).body(webResponse);

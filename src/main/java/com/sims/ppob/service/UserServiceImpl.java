@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-    public UserResponse registration(UserRegisterRequest request, BindingResult bindingResult) {
+    public void registration(UserRegisterRequest request, BindingResult bindingResult) {
         ValidationService.validate(bindingResult);
 
         Users user = new Users();
@@ -51,12 +51,13 @@ public class UserServiceImpl implements UserService{
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setPassword(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()));
+        user.setProfile("/user-static-profile.jpg");
         user.setCreatedAt(newDate);
         user.setUpdatedAt(newDate);
 
         userRepository.save(user);
 
-        return model.toUserResponse(user);
+        model.toUserResponse(user);
     }
 
     @Override
@@ -80,5 +81,10 @@ public class UserServiceImpl implements UserService{
         String accessToken = token.getToken(user.getId(), accessTokenExpirationDate);
 
         return model.toUserLoginResponse(accessToken);
+    }
+
+    @Override
+    public UserResponse getProfile(Users user) {
+        return model.toUserResponse(user);
     }
 }

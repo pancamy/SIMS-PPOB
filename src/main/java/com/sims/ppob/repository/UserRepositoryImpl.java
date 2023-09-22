@@ -16,14 +16,14 @@ public class UserRepositoryImpl implements UserRepository {
     private ExceptionRepository exceptionRepository;
 
     private static final String INSERT_USERS_SQL = "INSERT INTO users"
-            + " (id, email, first_name, last_name, password, created_at, updated_at) VALUES"
-            + " (?, ?, ?, ?, ?, ?, ?);";
+            + " (id, email, first_name, last_name, password, profile, created_at, updated_at) VALUES"
+            + " (?, ?, ?, ?, ?, ?, ?, ?);";
 
-    private static final String LOGIN_USERS_SQL = "SELECT id, email, first_name, last_name, password, created_at, updated_at"
+    private static final String LOGIN_USERS_SQL = "SELECT id, email, first_name, last_name, password, profile, created_at, updated_at"
             + " FROM users"
             + " WHERE email = ?";
 
-    private static final String SELECT_BY_ID_USERS_SQL = "SELECT id, email, first_name, last_name, created_at, updated_at"
+    private static final String SELECT_BY_ID_USERS_SQL = "SELECT id, email, first_name, last_name, profile, created_at, updated_at"
             + " FROM users"
             + " WHERE id = ?";
 
@@ -35,8 +35,9 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement.setString(3, users.getFirstName());
             preparedStatement.setString(4, users.getLastName());
             preparedStatement.setString(5, users.getPassword());
-            preparedStatement.setTimestamp(6, Timestamp.valueOf(users.getCreatedAt()));
-            preparedStatement.setTimestamp(7, Timestamp.valueOf(users.getUpdatedAt()));
+            preparedStatement.setString(6, users.getProfile());
+            preparedStatement.setTimestamp(7, Timestamp.valueOf(users.getCreatedAt()));
+            preparedStatement.setTimestamp(8, Timestamp.valueOf(users.getUpdatedAt()));
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -66,6 +67,7 @@ public class UserRepositoryImpl implements UserRepository {
                 user.setFirstName(resultSet.getString("first_name"));
                 user.setLastName(resultSet.getString("last_name"));
                 user.setPassword(resultSet.getString("password"));
+                user.setProfile(resultSet.getString("profile"));
                 user.setCreatedAt(resultSet.getTimestamp("created_at").toLocalDateTime());
                 user.setUpdatedAt(resultSet.getTimestamp("updated_at").toLocalDateTime());
             }
@@ -93,6 +95,7 @@ public class UserRepositoryImpl implements UserRepository {
                 user.setEmail(resultSet.getString("email"));
                 user.setFirstName(resultSet.getString("first_name"));
                 user.setLastName(resultSet.getString("last_name"));
+                user.setProfile(resultSet.getString("profile"));
                 user.setCreatedAt(resultSet.getTimestamp("created_at").toLocalDateTime());
                 user.setUpdatedAt(resultSet.getTimestamp("updated_at").toLocalDateTime());
             }

@@ -25,7 +25,7 @@ public class HandleException {
     public ResponseEntity<WebResponse<String>> apiException(ResponseStatusException exception) {
         return ResponseEntity.status(exception.getStatusCode())
                 .body(WebResponse.<String>builder()
-                        .status(exception.getStatusCode().value())
+                        .status(108)
                         .message(exception.getReason()).build());
     }
 

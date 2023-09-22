@@ -30,6 +30,9 @@ public class Users {
     @Column(name = "password", columnDefinition = "TEXT", nullable = false)
     private String password;
 
+    @Column(name = "profile", columnDefinition = "TEXT", nullable = false)
+    private String profile;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
