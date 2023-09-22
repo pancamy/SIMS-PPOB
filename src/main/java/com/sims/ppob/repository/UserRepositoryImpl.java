@@ -1,5 +1,6 @@
 package com.sims.ppob.repository;
 
+import com.sims.ppob.application.database.DbConnection;
 import com.sims.ppob.entity.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,12 +25,8 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     public void insertQuery(Users users) {
-        try (Connection connection = DriverManager
-                .getConnection("jdbc:postgresql://localhost:5432/db_sims_ppob?useSSL=false",
-                        "postgres",
-                        "postgres12345");
-
-            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USERS_SQL)) {
+        try (Connection connection = DbConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USERS_SQL)) {
             preparedStatement.setString(1, users.getId());
             preparedStatement.setString(2, users.getEmail());
             preparedStatement.setString(3, users.getFirstName());
