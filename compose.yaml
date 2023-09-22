@@ -1,20 +1,19 @@
 services:
   postgres:
-    container_name: 'postgres'
+    container_name: 'postgres_sims_ppob'
     image: 'postgres:latest'
     environment:
       - 'POSTGRES_DB=db_sims_ppob'
-      - 'POSTGRES_PASSWORD=12345'
+      - 'POSTGRES_PASSWORD=postgres12345'
       - 'POSTGRES_USER=postgres'
     ports:
       - '5432:5432'
-
   minio:
-    container_name: 'minio'
+    container_name: 'minio_sims_ppob'
     image: 'minio/minio:latest'
     environment:
       - 'MINIO_ROOT_USER=minio'
-      - 'MINIO_ROOT_PASSWORD=12345'
+      - 'MINIO_ROOT_PASSWORD=minio12345'
     command: server /data --console-address ":9001"
     ports:
       - '9000:9000'
