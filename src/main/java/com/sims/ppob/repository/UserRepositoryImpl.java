@@ -15,6 +15,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
+    private ExceptionRepository exceptionRepository;
+
     private static final String INSERT_USERS_SQL = "INSERT INTO users"
             + " (id, email, first_name, last_name, password, created_at, updated_at) VALUES"
             + " (?, ?, ?, ?, ?, ?, ?);";
@@ -42,25 +44,9 @@ public class UserRepositoryImpl implements UserRepository {
             if (e.getSQLState().equals("23505")) {
                 throw new ResponseStatusException(HttpStatus.CONFLICT, "Email sudah terdaftar");
             } else {
-                printSQLException(e);
+                ExceptionRepository.printSQLException(e);
 
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Silahkan menghubungi penyedia layanan");
-            }
-        }
-    }
-
-    public static void printSQLException(SQLException ex) {
-        for (Throwable e: ex) {
-            if (e instanceof SQLException) {
-                e.printStackTrace(System.err);
-                System.err.println("SQLState: " + ((SQLException) e).getSQLState());
-                System.err.println("Error Code: " + ((SQLException) e).getErrorCode());
-                System.err.println("Message: " + e.getMessage());
-                Throwable t = ex.getCause();
-                while (t != null) {
-                    System.out.println("Cause: " + t);
-                    t = t.getCause();
-                }
             }
         }
     }
