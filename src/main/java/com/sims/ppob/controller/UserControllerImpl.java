@@ -1,5 +1,6 @@
 package com.sims.ppob.controller;
 
+import com.sims.ppob.entity.Users;
 import com.sims.ppob.model.*;
 import com.sims.ppob.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,16 @@ public class UserControllerImpl implements UserController{
                 .status(0)
                 .message("Login Sukses")
                 .data(userLoginResponse)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(webResponse);
+    }
+
+    @Override
+    public ResponseEntity<WebResponse<UserLoginResponse>> profile(Users users) {
+        WebResponse<UserLoginResponse> webResponse = WebResponse.<UserLoginResponse>builder()
+                .status(0)
+                .message("Login Sukses")
                 .build();
 
         return ResponseEntity.status(HttpStatus.OK).body(webResponse);
