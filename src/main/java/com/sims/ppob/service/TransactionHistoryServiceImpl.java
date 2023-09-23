@@ -38,7 +38,7 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
 
         PagingResponse<List<TransactionHistoryResponse>> pagingResponse = new PagingResponse<>();
         pagingResponse.setOffset(pagingRequest.getOffset());
-        pagingResponse.setLimit(pagingRequest.getLimit());
+        pagingResponse.setLimit(banners.size());
         pagingResponse.setRecords(transactionHistoryResponses);
 
         return pagingResponse;

@@ -19,5 +19,5 @@ public interface TransactionHistoryController {
     )
     ResponseEntity<WebResponse<PagingResponse<List<TransactionHistoryResponse>>>> getALl(Users user,
                                                              @RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset,
-                                                             @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit);
+                                                             @RequestParam(value = "limit", required = false, defaultValue = "0") Integer limit);
 }

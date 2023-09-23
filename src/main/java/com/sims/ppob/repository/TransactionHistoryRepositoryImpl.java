@@ -4,6 +4,7 @@ import com.sims.ppob.application.database.DbConnection;
 import com.sims.ppob.entity.Banners;
 import com.sims.ppob.entity.TransactionHistories;
 import com.sims.ppob.model.PagingRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@Slf4j
 public class TransactionHistoryRepositoryImpl implements TransactionHistoryRepository {
 
     private ExceptionRepository exceptionRepository;
@@ -25,7 +27,7 @@ public class TransactionHistoryRepositoryImpl implements TransactionHistoryRepos
             + " FROM transaction_histories"
             + " ORDER BY created_at DESC"
             + " OFFSET ?"
-            + " LIMIT ?";
+            + " %s";
 
     @Override
     public void save(TransactionHistories transactionHistory) {
@@ -52,9 +54,15 @@ public class TransactionHistoryRepositoryImpl implements TransactionHistoryRepos
         List<TransactionHistories> transactionHistories = new ArrayList<>();
 
         try (Connection connection = DbConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_TRANSACTION_HISTORIES_SQL)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     String.format(SELECT_ALL_TRANSACTION_HISTORIES_SQL,
+                             (pagingRequest.getLimit() > 0) ? "LIMIT ?" : "")
+             )) {
             preparedStatement.setInt(1, pagingRequest.getOffset());
-            preparedStatement.setInt(2, pagingRequest.getLimit());
+
+            if (pagingRequest.getLimit() > 0) {
+                preparedStatement.setInt(2, pagingRequest.getLimit());
+            }
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
