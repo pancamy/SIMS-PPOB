@@ -1,24 +1,14 @@
 package com.sims.ppob.service;
 
-import com.sims.ppob.exception.ValidationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.web.server.ResponseStatusException;
 
 public class ValidationService {
 
-    static void validate(BindingResult bindingResult) {
+    static void validate(BindingResult bindingResult, String message) {
         if (bindingResult.hasErrors()) {
-            Map<String, String> fieldErrors = new HashMap<>();
-
-            for (FieldError error : bindingResult.getFieldErrors()) {
-                String attributeName = error.getField();
-                fieldErrors.put(attributeName, error.getDefaultMessage());
-            }
-
-            throw new ValidationException("Validation error", fieldErrors);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
         }
     }
 }

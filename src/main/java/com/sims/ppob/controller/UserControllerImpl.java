@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 public class UserControllerImpl implements UserController{
@@ -54,12 +55,26 @@ public class UserControllerImpl implements UserController{
     }
 
     @Override
-    public ResponseEntity<WebResponse<UserResponse>> update(Users user, UserUpdateRequest request, BindingResult bindingResult) {
-        UserResponse userResponse = userService.update(user, request, bindingResult);
+    public ResponseEntity<WebResponse<UserResponse>> profileUpdate(Users user, UserProfileUpdateRequest request,
+                                                                   BindingResult bindingResult) {
+        UserResponse userResponse = userService.profileUpdate(user, request, bindingResult);
 
         WebResponse<UserResponse> webResponse = WebResponse.<UserResponse>builder()
                 .status(0)
                 .message("Update Pofile berhasil")
+                .data(userResponse)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(webResponse);
+    }
+
+    @Override
+    public ResponseEntity<WebResponse<UserResponse>> profileIImageUpdate(Users user, MultipartFile request) {
+        UserResponse userResponse = userService.profileImageUpdate(user, request);
+
+        WebResponse<UserResponse> webResponse = WebResponse.<UserResponse>builder()
+                .status(0)
+                .message("Update Pofile Image berhasil")
                 .data(userResponse)
                 .build();
 

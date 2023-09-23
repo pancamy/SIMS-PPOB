@@ -25,18 +25,17 @@ public class HandleException {
     public ResponseEntity<WebResponse<String>> apiException(ResponseStatusException exception) {
         return ResponseEntity.status(exception.getStatusCode())
                 .body(WebResponse.<String>builder()
-                        .status(exception.getStatusCode() == HttpStatus.UNAUTHORIZED ? 108 : exception.getStatusCode().value())
+                        .status(mapToCustomStatusCode((HttpStatus) exception.getStatusCode()))
                         .message(exception.getReason()).build());
     }
 
-    @ExceptionHandler(ValidationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<WebResponse<?>> handleValidationException(ValidationException ex) {
-        WebResponse<?> response = WebResponse.builder()
-                .status(102)
-                .message("Parameter tidak sesuai format")
-                .build();
+    public static int mapToCustomStatusCode(HttpStatus status) {
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return switch (status) {
+            case BAD_REQUEST -> 102;
+            case UNAUTHORIZED -> 108;
+            case CONFLICT -> 409;
+            default -> -1;
+        };
     }
 }

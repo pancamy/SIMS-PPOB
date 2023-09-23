@@ -6,10 +6,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface UserController {
 
@@ -40,6 +38,13 @@ public interface UserController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    ResponseEntity<WebResponse<UserResponse>> update(Users user, @Valid @RequestBody UserUpdateRequest request,
-                                                     BindingResult bindingResult);
+    ResponseEntity<WebResponse<UserResponse>> profileUpdate(Users user, @Valid @RequestBody UserProfileUpdateRequest request,
+                                                            BindingResult bindingResult);
+
+    @PutMapping(
+            path = "/profile/image",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    ResponseEntity<WebResponse<UserResponse>> profileIImageUpdate(Users user, @Valid @RequestParam("profile_image") MultipartFile request);
 }

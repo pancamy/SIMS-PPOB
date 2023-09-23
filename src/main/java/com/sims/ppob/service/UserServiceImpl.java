@@ -3,6 +3,7 @@ package com.sims.ppob.service;
 import com.sims.ppob.entity.Users;
 import com.sims.ppob.model.*;
 import com.sims.ppob.repository.UserRepository;
+import com.sims.ppob.utility.ExstensionAllowed;
 import com.sims.ppob.utility.Model;
 import com.sims.ppob.utility.Token;
 import jakarta.transaction.Transactional;
@@ -12,11 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -40,7 +41,7 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public void registration(UserRegisterRequest request, BindingResult bindingResult) {
-        ValidationService.validate(bindingResult);
+        ValidationService.validate(bindingResult, "Parameter email tidak sesuai format");
 
         Users user = new Users();
         user.setId(UUID.randomUUID().toString());
@@ -59,7 +60,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserLoginResponse login(UserLoginRequest request, BindingResult bindingResult) {
-        ValidationService.validate(bindingResult);
+        ValidationService.validate(bindingResult, "Parameter email tidak sesuai format");
 
         Users user = userRepository.login(request.getEmail());
         if (user.getId() == null) {
@@ -86,8 +87,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserResponse update(Users user, UserUpdateRequest request, BindingResult bindingResult) {
-        ValidationService.validate(bindingResult);
+    public UserResponse profileUpdate(Users user, UserProfileUpdateRequest request, BindingResult bindingResult) {
+        ValidationService.validate(bindingResult, "Parameter tidak sesuai format");
 
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
@@ -95,5 +96,19 @@ public class UserServiceImpl implements UserService{
         Users userUpdate = userRepository.update(user);
 
         return model.toUserResponse(userUpdate);
+    }
+
+    @Override
+    public UserResponse profileImageUpdate(Users user, MultipartFile request) {
+        String fileContentType = request.getContentType();
+        if(ExstensionAllowed.imageContentTypes.contains(fileContentType)) {
+            user.setProfile(request.getOriginalFilename());
+
+            Users userUpdate = userRepository.update(user);
+
+            return model.toUserResponse(userUpdate);
+        }
+
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Format Image tidak sesuai");
     }
 }

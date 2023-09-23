@@ -3,6 +3,7 @@ package com.sims.ppob.service;
 import com.sims.ppob.entity.Users;
 import com.sims.ppob.model.*;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
 
@@ -12,5 +13,7 @@ public interface UserService {
 
     UserResponse profile(Users user);
 
-    UserResponse update(Users user, UserUpdateRequest request, BindingResult bindingResult);
+    UserResponse profileUpdate(Users user, UserProfileUpdateRequest request, BindingResult bindingResult);
+
+    UserResponse profileImageUpdate(Users user, MultipartFile request);
 }

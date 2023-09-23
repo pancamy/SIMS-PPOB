@@ -28,7 +28,7 @@ public class UserRepositoryImpl implements UserRepository {
             + " WHERE id = ?";
 
     private static final String UPDATE_USERS_SQL = "UPDATE users"
-            + " SET first_name = ?, last_name = ?"
+            + " SET first_name = ?, last_name = ?, profile = ?"
             + " WHERE id = ?";
 
     public void save(Users users) {
@@ -118,7 +118,8 @@ public class UserRepositoryImpl implements UserRepository {
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USERS_SQL)) {
             preparedStatement.setString(1, user.getFirstName());
             preparedStatement.setString(2, user.getLastName());
-            preparedStatement.setString(3, user.getId());
+            preparedStatement.setString(3, user.getProfile());
+            preparedStatement.setString(4, user.getId());
 
             preparedStatement.executeUpdate();
 
