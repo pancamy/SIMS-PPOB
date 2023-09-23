@@ -8,7 +8,7 @@ import java.util.Random;
 public class RandomGenerator {
 
     public String randomNumber() {
-        java.util.Random randomObj = new java.util.Random();
+        Random randomObj = new Random();
         int number = randomObj.nextInt(9000) + 1000;
 
         return String.valueOf(number);
