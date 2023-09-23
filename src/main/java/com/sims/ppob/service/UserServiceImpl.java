@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService{
 
         Balances balance = new Balances();
         balance.setId(UUID.randomUUID().toString());
-        balance.setBalance(0L);
+        balance.setBalance(1000000L);
         balance.setUsers(user);
         balance.setCreatedAt(newDate);
         balance.setUpdatedAt(newDate);
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService{
     public UserLoginResponse login(UserLoginRequest request, BindingResult bindingResult) {
         ValidationService.validate(bindingResult, "Parameter email tidak sesuai format");
 
-        Users user = userRepository.login(request.getEmail());
+        Users user = userRepository.getByEmail(request.getEmail());
         if (user.getId() == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email atau password salah");
         }
@@ -88,10 +88,10 @@ public class UserServiceImpl implements UserService{
         }
 
         Date now = new Date();
-        long accessTokenExpirationTimeInMillis = 10 * 60 * 1000;
+        long accessTokenExpirationTimeInMillis = 12 * 60 * 60 * 1000;
 
         Date accessTokenExpirationDate = new Date(now.getTime() + accessTokenExpirationTimeInMillis);
-        String accessToken = token.getToken(user.getId(), accessTokenExpirationDate);
+        String accessToken = token.getToken(user.getEmail(), accessTokenExpirationDate);
 
         return model.toUserLoginResponse(accessToken);
     }

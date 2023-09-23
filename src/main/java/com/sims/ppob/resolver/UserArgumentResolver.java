@@ -50,9 +50,9 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
                 return unauthorizedHandling();
             }
 
-            String userId = extractUserIdFromToken(jwtToken);
+            String email = extractEmailFromToken(jwtToken);
 
-            Users userParent = userRepository.getById(userId);
+            Users userParent = userRepository.getByEmail(email);
             if (userParent.getId() == null) {
                 return unauthorizedHandling();
             }
@@ -63,10 +63,10 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         }
     }
 
-    private String extractUserIdFromToken(String token) {
+    private String extractEmailFromToken(String token) {
         Claims claims = Jwts.parser().setSigningKey(KeyConstant.secretKeyJWT).parseClaimsJws(token).getBody();
 
-        return claims.get("user_id", String.class);
+        return claims.get("email", String.class);
     }
 
     private ResponseStatusException unauthorizedHandling() {

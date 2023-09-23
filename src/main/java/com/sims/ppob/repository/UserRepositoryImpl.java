@@ -56,7 +56,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Users login(String email) {
+    public Users getByEmail(String email) {
         try (Connection connection = DbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(LOGIN_USERS_SQL)) {
             preparedStatement.setString(1, email);

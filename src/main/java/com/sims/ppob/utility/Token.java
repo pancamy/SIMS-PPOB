@@ -11,11 +11,11 @@ import java.util.Date;
 @Slf4j
 public class Token {
 
-    public String getToken(String userId, Date accessTokenExpirationDate) {
+    public String getToken(String email, Date accessTokenExpirationDate) {
         return Jwts.builder()
                 .setHeaderParam("typ", "JWT")
-                .setSubject(userId)
-                .claim("user_id", userId)
+                .setSubject(email)
+                .claim("email", email)
                 .setExpiration(accessTokenExpirationDate)
                 .signWith(SignatureAlgorithm.HS256, KeyConstant.secretKeyJWT)
                 .compact();
