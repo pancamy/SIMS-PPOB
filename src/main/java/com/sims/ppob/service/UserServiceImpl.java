@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService{
     public UserResponse profileImageUpdate(Users user, MultipartFile request) {
         String fileContentType = request.getContentType();
         if(ExstensionAllowed.imageContentTypes.contains(fileContentType)) {
-            user.setProfile(request.getOriginalFilename());
+            user.setProfile("/" + request.getOriginalFilename());
 
             Users userUpdate = userRepository.update(user);
 
