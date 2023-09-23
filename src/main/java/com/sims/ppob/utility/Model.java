@@ -1,13 +1,11 @@
 package com.sims.ppob.utility;
 
 import com.sims.ppob.constant.UrlConstant;
+import com.sims.ppob.entity.Balances;
 import com.sims.ppob.entity.Banners;
 import com.sims.ppob.entity.Services;
 import com.sims.ppob.entity.Users;
-import com.sims.ppob.model.BannerResponse;
-import com.sims.ppob.model.ServiceResponse;
-import com.sims.ppob.model.UserLoginResponse;
-import com.sims.ppob.model.UserResponse;
+import com.sims.ppob.model.*;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -42,6 +40,12 @@ public class Model {
                 .serviceName(service.getServiceName())
                 .serviceIcon(service.getServiceIcon())
                 .serviceTariff(service.getServiceTariff())
+                .build();
+    }
+
+    public BalanceResponse toBalanceResponse(Balances balance) {
+        return BalanceResponse.builder()
+                .balance(balance.getBalance())
                 .build();
     }
 }

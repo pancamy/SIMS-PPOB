@@ -1,7 +1,9 @@
 package com.sims.ppob.service;
 
+import com.sims.ppob.entity.Balances;
 import com.sims.ppob.entity.Users;
 import com.sims.ppob.model.*;
+import com.sims.ppob.repository.BalanceRepository;
 import com.sims.ppob.repository.UserRepository;
 import com.sims.ppob.utility.ExstensionAllowed;
 import com.sims.ppob.utility.Model;
@@ -31,11 +33,14 @@ public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
 
+    private final BalanceRepository balanceRepository;
+
     @Autowired
-    public UserServiceImpl(Token token, Model model, UserRepository userRepository) {
+    public UserServiceImpl(Token token, Model model, UserRepository userRepository, BalanceRepository balanceRepository) {
         this.token = token;
         this.model = model;
         this.userRepository = userRepository;
+        this.balanceRepository = balanceRepository;
     }
 
     @Override
@@ -54,6 +59,15 @@ public class UserServiceImpl implements UserService{
         user.setUpdatedAt(newDate);
 
         userRepository.save(user);
+
+        Balances balance = new Balances();
+        balance.setId(UUID.randomUUID().toString());
+        balance.setBalance(0L);
+        balance.setUsers(user);
+        balance.setCreatedAt(newDate);
+        balance.setUpdatedAt(newDate);
+
+        balanceRepository.save(balance);
 
         model.toUserResponse(user);
     }

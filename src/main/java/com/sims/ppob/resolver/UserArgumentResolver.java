@@ -70,6 +70,6 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     private ResponseStatusException unauthorizedHandling() {
-        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token tidak tidak valid atau kadaluwarsa");
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token tidak valid atau kadaluwarsa");
     }
 }

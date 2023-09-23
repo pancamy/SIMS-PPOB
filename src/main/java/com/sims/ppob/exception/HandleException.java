@@ -34,7 +34,9 @@ public class HandleException {
         return switch (status) {
             case BAD_REQUEST -> 102;
             case UNAUTHORIZED -> 108;
-            case CONFLICT -> 409;
+            case NOT_FOUND -> 114;
+            case CONFLICT -> 120;
+            case INTERNAL_SERVER_ERROR -> 126;
             default -> -1;
         };
     }
