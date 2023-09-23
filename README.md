@@ -405,3 +405,24 @@ Response Body (Unauthorized) :
     "data": null
 }
 ```
+
+## Installation
+
+Anda hanya memerlukan docker untuk menjalankan database postgres dan migrasi otomatis table project. Silahkan sesuaika
+dengan kebutuhan project anda
+
+compose.yaml
+```
+services:
+  postgres:
+    container_name: 'postgres_sims_ppob'
+    image: 'postgres:latest'
+    environment:
+      - 'POSTGRES_DB=db_sims_ppob'
+      - 'POSTGRES_PASSWORD=abc123'
+      - 'POSTGRES_USER=postgres'
+    ports:
+      - '5432:5432'
+```
+
+Jalankan project dengan port localhost:3000, dan database postgres dengan port localhost:5432
