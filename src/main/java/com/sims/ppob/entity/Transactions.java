@@ -25,6 +25,9 @@ public class Transactions {
     @Column(name = "transaction_type", nullable = false)
     private String transactionType;
 
+    @Column(name = "total_amount", nullable = false)
+    private Long totalAmount;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
@@ -38,8 +41,4 @@ public class Transactions {
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private Users user;
-
-    @ManyToOne
-    @JoinColumn(name = "balance_id", referencedColumnName = "id")
-    private Balances balance;
 }

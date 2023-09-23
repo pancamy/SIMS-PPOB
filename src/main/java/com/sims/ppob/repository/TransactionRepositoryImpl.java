@@ -17,7 +17,7 @@ public class TransactionRepositoryImpl implements TransactionRepository{
     private ExceptionRepository exceptionRepository;
 
     private static final String INSERT_TRANSACTIONS_SQL = "INSERT INTO transactions"
-            + " (id, invoice_number, transaction_type, balance_id, service_id, user_id, created_at, updated_at) VALUES"
+            + " (id, invoice_number, transaction_type, total_amount, service_id, user_id, created_at, updated_at) VALUES"
             + " (?, ?, ?, ?, ?, ?, ?, ?);";
 
     @Override
@@ -27,7 +27,7 @@ public class TransactionRepositoryImpl implements TransactionRepository{
             preparedStatement.setString(1, transaction.getId());
             preparedStatement.setString(2, transaction.getInvoiceNumber());
             preparedStatement.setString(3, transaction.getTransactionType());
-            preparedStatement.setString(4, transaction.getBalance().getId());
+            preparedStatement.setLong(4, transaction.getTotalAmount());
             preparedStatement.setString(5, transaction.getServices().getId());
             preparedStatement.setString(6, transaction.getUser().getId());
             preparedStatement.setTimestamp(7, Timestamp.valueOf(transaction.getCreatedAt()));

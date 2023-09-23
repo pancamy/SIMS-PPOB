@@ -64,7 +64,7 @@ public class Model {
                 .serviceCode(transaction.getServices().getServiceCode())
                 .serviceName(transaction.getServices().getServiceName())
                 .transactionType(transaction.getTransactionType())
-                .totalAmount(transaction.getBalance().getBalance())
+                .totalAmount(transaction.getTotalAmount())
                 .createdOn(transaction.getCreatedAt())
                 .build();
     }

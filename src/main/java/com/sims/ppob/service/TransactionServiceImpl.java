@@ -1,16 +1,10 @@
 package com.sims.ppob.service;
 
-import com.sims.ppob.entity.Balances;
-import com.sims.ppob.entity.Services;
-import com.sims.ppob.entity.Transactions;
-import com.sims.ppob.entity.Users;
+import com.sims.ppob.entity.*;
 import com.sims.ppob.enumeration.TransactionTypes;
 import com.sims.ppob.model.TransactionPaymentRequest;
 import com.sims.ppob.model.TransactionResponse;
-import com.sims.ppob.repository.BalanceRepository;
-import com.sims.ppob.repository.ServiceRepository;
-import com.sims.ppob.repository.TransactionRepository;
-import com.sims.ppob.repository.UserRepository;
+import com.sims.ppob.repository.*;
 import com.sims.ppob.utility.Model;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +23,8 @@ public class TransactionServiceImpl implements TransactionService{
 
     private final TransactionRepository transactionRepository;
 
+    private final TransactionHistoryRepository transactionHistoryRepository;
+
     private final UserRepository userRepository;
 
     private final BalanceRepository balanceRepository;
@@ -38,8 +34,9 @@ public class TransactionServiceImpl implements TransactionService{
     private final Model model;
 
     @Autowired
-    public TransactionServiceImpl(TransactionRepository transactionRepository, UserRepository userRepository, BalanceRepository balanceRepository, ServiceRepository serviceRepository, Model model) {
+    public TransactionServiceImpl(TransactionRepository transactionRepository, TransactionHistoryRepository transactionHistoryRepository, UserRepository userRepository, BalanceRepository balanceRepository, ServiceRepository serviceRepository, Model model) {
         this.transactionRepository = transactionRepository;
+        this.transactionHistoryRepository = transactionHistoryRepository;
         this.userRepository = userRepository;
         this.balanceRepository = balanceRepository;
         this.serviceRepository = serviceRepository;
@@ -61,6 +58,11 @@ public class TransactionServiceImpl implements TransactionService{
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Balance tidak ditemukan");
         }
 
+        if (balance.getBalance() < service.getServiceTariff()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Balance tidak cukup untuk pembayaran " + service.getServiceName());
+        }
+
+        // transaction
         Transactions transaction = new Transactions();
         transaction.setId(UUID.randomUUID().toString());
         transaction.setInvoiceNumber("TEST");
@@ -69,9 +71,23 @@ public class TransactionServiceImpl implements TransactionService{
         transaction.setUpdatedAt(newDate);
         transaction.setUser(user);
         transaction.setServices(service);
-        transaction.setBalance(balance);
-
+        transaction.setTotalAmount(balance.getBalance());
         transactionRepository.save(transaction);
+
+        // histories
+        TransactionHistories transactionHistory = new TransactionHistories();
+        transactionHistory.setId(UUID.randomUUID().toString());
+        transactionHistory.setInvoiceNumber("TEST");
+        transactionHistory.setTransactionType(TransactionTypes.TOPUP.toString());
+        transactionHistory.setDescription("Top Up balance");
+        transactionHistory.setTotalAmount(balance.getBalance());
+        transactionHistory.setCreatedAt(newDate);
+        transactionHistory.setUpdatedAt(newDate);
+        transactionHistoryRepository.save(transactionHistory);
+
+        // balance reduction
+        balance.setBalance(balance.getBalance() - service.getServiceTariff());
+        balanceRepository.update(balance);
 
         return model.toTransactionResponse(transaction);
     }
