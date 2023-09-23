@@ -26,7 +26,7 @@ public class Model {
     public BannerResponse toBannerResponse(Banners banner) {
         return BannerResponse.builder()
                 .bannerName(banner.getBannerName())
-                .bannerImage(banner.getBannerImage())
+                .bannerImage(UrlConstant.BASE_URL + banner.getBannerImage())
                 .description(banner.getDescription())
                 .build();
     }
@@ -35,7 +35,7 @@ public class Model {
         return ServiceResponse.builder()
                 .serviceCode(service.getServiceCode())
                 .serviceName(service.getServiceName())
-                .serviceIcon(service.getServiceIcon())
+                .serviceIcon(UrlConstant.BASE_URL + service.getServiceIcon())
                 .serviceTariff(service.getServiceTariff())
                 .build();
     }

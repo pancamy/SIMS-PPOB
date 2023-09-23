@@ -11,4 +11,6 @@ public interface ServiceRepository {
     List<Services> getAll();
 
     Services getByStatusCode(String serviceCode);
+
+    void save(Services service);
 }

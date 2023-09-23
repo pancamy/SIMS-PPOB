@@ -7,10 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +22,10 @@ public class ServiceRepositoryImpl implements ServiceRepository{
     private static final String GET_BY_STATUS_CODE_SERVICES_SQL = "SELECT id, service_code, service_name, service_tariff, service_icon, created_at, updated_at"
             + " FROM services"
             + " WHERE service_code = ?";
+
+    private static final String INSERT_SERVICES_SQL = "INSERT INTO services"
+            + " (id, service_code, service_name, service_tariff, service_icon, created_at, updated_at) VALUES"
+            + " (?, ?, ?, ?, ?, ?, ?);";
 
     @Override
     public List<Services> getAll() {
@@ -76,6 +77,26 @@ public class ServiceRepositoryImpl implements ServiceRepository{
             }
 
             return service;
+        } catch (SQLException e) {
+            ExceptionRepository.printSQLException(e);
+
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    @Override
+    public void save(Services service) {
+        try (Connection connection = DbConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_SERVICES_SQL)) {
+            preparedStatement.setString(1, service.getId());
+            preparedStatement.setString(2, service.getServiceCode());
+            preparedStatement.setString(3, service.getServiceName());
+            preparedStatement.setLong(4, service.getServiceTariff());
+            preparedStatement.setString(5, service.getServiceIcon());
+            preparedStatement.setTimestamp(6, Timestamp.valueOf(service.getCreatedAt()));
+            preparedStatement.setTimestamp(7, Timestamp.valueOf(service.getUpdatedAt()));
+
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             ExceptionRepository.printSQLException(e);
 

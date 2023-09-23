@@ -7,4 +7,6 @@ import java.util.List;
 public interface BannerRepository {
 
     List<Banners> getAll();
+
+    void save(Banners banner);
 }

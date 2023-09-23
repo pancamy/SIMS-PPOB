@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService{
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setPassword(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()));
-        user.setProfile("/user-static-profile.jpg");
+        user.setProfile("/user-static-profile.jpeg");
         user.setCreatedAt(newDate);
         user.setUpdatedAt(newDate);
 

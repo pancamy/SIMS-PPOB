@@ -18,7 +18,7 @@ public class Services {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(name = "service_code", nullable = false)
+    @Column(name = "service_code", nullable = false, unique = true)
     private String serviceCode;
 
     @Column(name = "service_name", nullable = false)
