@@ -9,18 +9,13 @@ import java.util.Random;
 @Component
 public class Numbering {
 
+    private RandomGenerator randomGenerator;
+
     public String InvoiceNumber() {
         LocalDate now = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyyyy");
         String dateTimeStr = now.format(formatter);
 
-        return "INV"+dateTimeStr+"-"+randomNumber();
-    }
-
-    public String randomNumber() {
-        Random random = new Random();
-        int number = random.nextInt(9000) + 1000;
-
-        return String.valueOf(number);
+        return "INV"+dateTimeStr+"-"+randomGenerator.randomNumber();
     }
 }
