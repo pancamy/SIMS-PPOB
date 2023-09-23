@@ -2,8 +2,7 @@ package com.sims.ppob.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sims.ppob.model.BannerSaveRequest;
-import com.sims.ppob.model.PagingRequest;
-import com.sims.ppob.model.UserLoginRequest;
+import com.sims.ppob.model.ServiceSaveRequest;
 import com.sims.ppob.model.UserLoginResponse;
 import com.sims.ppob.utility.RandomGenerator;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.junit.jupiter.api.Assertions.*;
 @AutoConfigureMockMvc
 @SpringBootTest
-class BannerControllerImplTest {
+class ServiceControllerImplTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -36,7 +35,7 @@ class BannerControllerImplTest {
     public void getAllSuccess() throws Exception {
         UserLoginResponse userLoginResponse = useMe.login();
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/banner")
+        mockMvc.perform(MockMvcRequestBuilders.get("/services")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer "+userLoginResponse.getToken()))
@@ -48,14 +47,27 @@ class BannerControllerImplTest {
     }
 
     @Test
+    public void getAllUnauthorized() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/services")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(108))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data").isEmpty());
+    }
+
+    @Test
     public void saveSuccess() throws Exception {
         UserLoginResponse userLoginResponse = useMe.login();
 
-        BannerSaveRequest request = new BannerSaveRequest();
-        request.setBannerName(randomGenerator.randomString(5));
-        request.setDescription(randomGenerator.randomString(5));
+        ServiceSaveRequest request = new ServiceSaveRequest();
+        request.setServiceCode(randomGenerator.randomString(5));
+        request.setServiceName(randomGenerator.randomString(5));
+        request.setServiceTariff(10000L);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/banner")
+        mockMvc.perform(MockMvcRequestBuilders.post("/services")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer "+userLoginResponse.getToken())
@@ -64,20 +76,22 @@ class BannerControllerImplTest {
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(0))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").isString())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.banner_name").isString())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.banner_image").isString())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.description").isString());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.service_code").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.service_name").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.service_icon").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.service_tariff").isNumber());
     }
 
     @Test
     public void saveBadRequest() throws Exception {
         UserLoginResponse userLoginResponse = useMe.login();
 
-        BannerSaveRequest request = new BannerSaveRequest();
-        request.setBannerName("");
-        request.setDescription("");
+        ServiceSaveRequest request = new ServiceSaveRequest();
+        request.setServiceCode("");
+        request.setServiceName("");
+        request.setServiceTariff(0L);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/banner")
+        mockMvc.perform(MockMvcRequestBuilders.post("/services")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer "+userLoginResponse.getToken())
@@ -95,7 +109,7 @@ class BannerControllerImplTest {
         request.setBannerName(randomGenerator.randomString(5));
         request.setDescription(randomGenerator.randomString(5));
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/banner")
+        mockMvc.perform(MockMvcRequestBuilders.post("/services")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))

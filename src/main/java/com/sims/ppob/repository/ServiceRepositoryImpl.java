@@ -98,9 +98,13 @@ public class ServiceRepositoryImpl implements ServiceRepository{
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            ExceptionRepository.printSQLException(e);
+            if (e.getSQLState().equals("23505")) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Status code sudah terdaftar");
+            } else {
+                ExceptionRepository.printSQLException(e);
 
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+            }
         }
     }
 }
