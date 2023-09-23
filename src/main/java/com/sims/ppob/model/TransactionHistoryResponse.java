@@ -1,7 +1,6 @@
 package com.sims.ppob.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,7 +25,7 @@ public class TransactionHistoryResponse {
 
     private Long totalAmount;
 
-    private LocalDateTime createdAt;
+    private LocalDateTime createdOn;
 
     private LocalDateTime updatedAt;
 }

@@ -3,7 +3,6 @@ package com.sims.ppob.utility;
 import com.sims.ppob.constant.UrlConstant;
 import com.sims.ppob.entity.*;
 import com.sims.ppob.model.*;
-import com.sims.ppob.repository.TransactionHistoryRepository;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -49,13 +48,13 @@ public class Model {
 
     public TransactionHistoryResponse toTransactionHistoryResponse(TransactionHistories transactionHistory) {
         return TransactionHistoryResponse.builder()
-                .id(transactionHistory.getId())
+//                .id(transactionHistory.getId())
                 .invoiceNumber(transactionHistory.getInvoiceNumber())
                 .transactionType(transactionHistory.getTransactionType())
                 .description(transactionHistory.getDescription())
                 .totalAmount(transactionHistory.getTotalAmount())
-                .createdAt(transactionHistory.getCreatedAt())
-                .updatedAt(transactionHistory.getUpdatedAt())
+                .createdOn(transactionHistory.getCreatedAt())
+//                .updatedAt(transactionHistory.getUpdatedAt())
                 .build();
     }
 }
