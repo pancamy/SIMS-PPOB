@@ -232,7 +232,7 @@ Response Body (Success) :
     "data": [
         {
             "banner_name": "Banner 1",
-            "banner_image": "simsppob.application-panca.cloud/dummy.jpeg",
+            "banner_image": "http://simsppob.application-panca.cloud/dummy.jpeg",
             "description": "Banner Pemuda Pemudi"
         }
     ]
@@ -259,7 +259,7 @@ Response Body (Success) :
     "data": [
         {
             "banner_name": "Banner 1",
-            "banner_image": "simsppob.application-panca.cloud/dummy.jpeg",
+            "banner_image": "http://simsppob.application-panca.cloud/dummy.jpeg",
             "description": "Banner Pemuda Pemudi"
         }
     ]
