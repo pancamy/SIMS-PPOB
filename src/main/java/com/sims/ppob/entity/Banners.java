@@ -24,6 +24,9 @@ public class Banners {
     @Column(name = "description", nullable = false)
     private String description;
 
+    @Column(name = "banner_image", columnDefinition = "TEXT", nullable = false)
+    private String bannerImage;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 

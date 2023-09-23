@@ -13,8 +13,12 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 public class UserControllerImpl implements UserController{
 
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public UserControllerImpl(UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     public ResponseEntity<WebResponse<UserResponse>> registration(UserRegisterRequest request, BindingResult bindingResult) {

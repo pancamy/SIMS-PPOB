@@ -59,6 +59,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional
     public UserLoginResponse login(UserLoginRequest request, BindingResult bindingResult) {
         ValidationService.validate(bindingResult, "Parameter email tidak sesuai format");
 
@@ -82,11 +83,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional
     public UserResponse profile(Users user) {
         return model.toUserResponse(user);
     }
 
     @Override
+    @Transactional
     public UserResponse profileUpdate(Users user, UserProfileUpdateRequest request, BindingResult bindingResult) {
         ValidationService.validate(bindingResult, "Parameter tidak sesuai format");
 
@@ -99,6 +102,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional
     public UserResponse profileImageUpdate(Users user, MultipartFile request) {
         String fileContentType = request.getContentType();
         if(ExstensionAllowed.imageContentTypes.contains(fileContentType)) {
