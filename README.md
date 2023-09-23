@@ -1,6 +1,8 @@
 # SIMS PPOB (PT. Nutech Integrasi)
-Technical test untuk posisi Java Developer. Untuk melihat dokumentasi yang ada dalam project ini, silahkan download postman melalui 
-link berikut -> https://download.com 
+Technical test untuk posisi Java Developer. Untuk melihat dokumentasi dan url server project ini, 
+silahkan akses melalui link
+- POSTMAN (Google Drive) : https://drive.google.com/drive/folders/13Xeu77OYE_nqJydK5JXizX_KVO0yI3OX?usp=sharing
+- URL Server Project : http://simsppob.application-panca.cloud
 
 ## Documentations
 
