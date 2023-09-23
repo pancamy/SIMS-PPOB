@@ -1,11 +1,9 @@
 package com.sims.ppob.utility;
 
 import com.sims.ppob.constant.UrlConstant;
-import com.sims.ppob.entity.Balances;
-import com.sims.ppob.entity.Banners;
-import com.sims.ppob.entity.Services;
-import com.sims.ppob.entity.Users;
+import com.sims.ppob.entity.*;
 import com.sims.ppob.model.*;
+import com.sims.ppob.repository.TransactionHistoryRepository;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -46,6 +44,18 @@ public class Model {
     public BalanceResponse toBalanceResponse(Balances balance) {
         return BalanceResponse.builder()
                 .balance(balance.getBalance())
+                .build();
+    }
+
+    public TransactionHistoryResponse toTransactionHistoryResponse(TransactionHistories transactionHistory) {
+        return TransactionHistoryResponse.builder()
+                .id(transactionHistory.getId())
+                .invoiceNumber(transactionHistory.getInvoiceNumber())
+                .transactionType(transactionHistory.getTransactionType())
+                .description(transactionHistory.getDescription())
+                .totalAmount(transactionHistory.getTotalAmount())
+                .createdAt(transactionHistory.getCreatedAt())
+                .updatedAt(transactionHistory.getUpdatedAt())
                 .build();
     }
 }
