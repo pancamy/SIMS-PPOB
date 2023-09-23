@@ -25,7 +25,10 @@ public class Services {
     private String serviceName;
 
     @Column(name = "service_tariff", nullable = false)
-    private String serviceTariff;
+    private Long serviceTariff;
+
+    @Column(name = "service_icon", nullable = false)
+    private String serviceIcon;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

@@ -30,7 +30,7 @@ public class BannerServiceImpl implements BannerService{
         List<Banners> banners = bannerRepository.getAll();
 
         return banners.stream()
-                .map(model::toUBannerResponse)
+                .map(model::toBannerResponse)
                 .collect(Collectors.toList());
     }
 }

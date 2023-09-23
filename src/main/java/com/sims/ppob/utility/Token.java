@@ -1,5 +1,6 @@
 package com.sims.ppob.utility;
 
+import com.sims.ppob.constant.KeyConstant;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,7 @@ public class Token {
                 .setSubject(userId)
                 .claim("user_id", userId)
                 .setExpiration(accessTokenExpirationDate)
-                .signWith(SignatureAlgorithm.HS256, "3r83trf5456782cehfoue")
+                .signWith(SignatureAlgorithm.HS256, KeyConstant.secretKeyJWT)
                 .compact();
     }
 }

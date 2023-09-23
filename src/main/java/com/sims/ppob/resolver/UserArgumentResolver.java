@@ -1,5 +1,6 @@
 package com.sims.ppob.resolver;
 
+import com.sims.ppob.constant.KeyConstant;
 import com.sims.ppob.entity.Users;
 import com.sims.ppob.repository.UserRepository;
 import io.jsonwebtoken.Claims;
@@ -40,31 +41,35 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         String token = servletRequest.getHeader("Authorization");
 
         if(token == null || !token.startsWith("Bearer ")){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token tidak tidak valid atau kadaluwarsa");
+            return unauthorizedHandling();
         }
 
         try {
             String jwtToken = token.substring(7);
             if("null".equals(jwtToken)){
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token tidak tidak valid atau kadaluwarsa");
+                return unauthorizedHandling();
             }
 
             String userId = extractUserIdFromToken(jwtToken);
 
             Users userParent = userRepository.getById(userId);
             if (userParent.getId() == null) {
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token tidak tidak valid atau kadaluwarsa");
+                return unauthorizedHandling();
             }
 
             return userParent;
         } catch (ExpiredJwtException e){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token tidak tidak valid atau kadaluwarsa");
+            return unauthorizedHandling();
         }
     }
 
     private String extractUserIdFromToken(String token) {
-        Claims claims = Jwts.parser().setSigningKey("3r83trf5456782cehfoue").parseClaimsJws(token).getBody();
+        Claims claims = Jwts.parser().setSigningKey(KeyConstant.secretKeyJWT).parseClaimsJws(token).getBody();
 
         return claims.get("user_id", String.class);
+    }
+
+    private ResponseStatusException unauthorizedHandling() {
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token tidak tidak valid atau kadaluwarsa");
     }
 }
