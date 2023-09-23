@@ -13,9 +13,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserProfileUpdateRequest {
 
-    @NotEmpty(message = "First name tidak boleh kosong")
+    @NotEmpty(message = "Parameter first name tidak boleh kosong")
     private String firstName;
 
-    @NotEmpty(message = "Last name tidak boleh kosong")
+    @NotEmpty(message = "Parameter last name tidak boleh kosong")
     private String lastName;
 }

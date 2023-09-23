@@ -14,11 +14,10 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserLoginRequest {
 
-    @NotEmpty(message = "Email tidak boleh kosong")
-    @Pattern(regexp = "^[A-Za-z0-9+_.-]+@(.+)$", message = "Email invalid")
+    @NotEmpty(message = "Parameter email tidak boleh kosong")
+    @Pattern(regexp = "^[A-Za-z0-9+_.-]+@(.+)$", message = "Parameter email tidak sesuai format")
     private String email;
 
-    @NotEmpty(message = "Password tidak boleh kosong")
-    @Size(min = 8, message = "Password minimal 8 angka")
+    @NotEmpty(message = "Parameter password tidak boleh kosong")
     private String password;
 }

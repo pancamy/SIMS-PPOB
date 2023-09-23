@@ -27,6 +27,10 @@ public class BalanceRepositoryImpl implements BalanceRepository{
             + " (id, balance, user_id, created_at, updated_at) VALUES"
             + " (?, ?, ?, ?, ?);";
 
+    private static final String UPDATE_BALANCES_SQL = "UPDATE balances"
+            + " SET balance = ?"
+            + " WHERE user_id = ?";
+
     @Override
     public Balances getByUserId(String userId) {
         try (Connection connection = DbConnection.getConnection();
@@ -64,6 +68,23 @@ public class BalanceRepositoryImpl implements BalanceRepository{
             preparedStatement.setTimestamp(5, Timestamp.valueOf(balance.getUpdatedAt()));
 
             preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            ExceptionRepository.printSQLException(e);
+
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    @Override
+    public Balances update(Balances balance) {
+        try (Connection connection = DbConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_BALANCES_SQL)) {
+            preparedStatement.setLong(1, balance.getBalance());
+            preparedStatement.setString(2, balance.getUsers().getId());
+
+            preparedStatement.executeUpdate();
+
+            return balance;
         } catch (SQLException e) {
             ExceptionRepository.printSQLException(e);
 

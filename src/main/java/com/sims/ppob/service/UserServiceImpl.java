@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public void registration(UserRegisterRequest request, BindingResult bindingResult) {
-        ValidationService.validate(bindingResult, "Parameter email tidak sesuai format");
+        ValidationService.validate(bindingResult);
 
         Users user = new Users();
         user.setId(UUID.randomUUID().toString());
@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public UserLoginResponse login(UserLoginRequest request, BindingResult bindingResult) {
-        ValidationService.validate(bindingResult, "Parameter email tidak sesuai format");
+        ValidationService.validate(bindingResult);
 
         Users user = userRepository.getByEmail(request.getEmail());
         if (user.getId() == null) {
@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public UserResponse profileUpdate(Users user, UserProfileUpdateRequest request, BindingResult bindingResult) {
-        ValidationService.validate(bindingResult, "Parameter tidak sesuai format");
+        ValidationService.validate(bindingResult);
 
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
