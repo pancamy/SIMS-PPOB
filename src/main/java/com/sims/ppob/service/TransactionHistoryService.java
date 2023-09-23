@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface TransactionHistoryService {
 
-    PagingResponse<TransactionHistoryResponse> getAll(Users user, PagingRequest pagingRequest);
+    PagingResponse<List<TransactionHistoryResponse>> getAll(Users user, PagingRequest pagingRequest);
 }

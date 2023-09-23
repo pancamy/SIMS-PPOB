@@ -24,14 +24,14 @@ public class TransactionHistoryControllerImpl implements TransactionHistoryContr
     }
 
     @Override
-    public ResponseEntity<WebResponse<PagingResponse<TransactionHistoryResponse>>> getALl(Users user, Integer offset, Integer limit) {
+    public ResponseEntity<WebResponse<PagingResponse<List<TransactionHistoryResponse>>>> getALl(Users user, Integer offset, Integer limit) {
         PagingRequest pagingRequest = new PagingRequest();
         pagingRequest.setOffset(offset);
         pagingRequest.setLimit(limit);
 
-        PagingResponse<TransactionHistoryResponse> bannerResponses = transactionHistoryService.getAll(user, pagingRequest);
+        PagingResponse<List<TransactionHistoryResponse>> bannerResponses = transactionHistoryService.getAll(user, pagingRequest);
 
-        WebResponse<PagingResponse<TransactionHistoryResponse>> webResponse = WebResponse.<PagingResponse<TransactionHistoryResponse>>builder()
+        WebResponse<PagingResponse<List<TransactionHistoryResponse>>> webResponse = WebResponse.<PagingResponse<List<TransactionHistoryResponse>>>builder()
                 .status(0)
                 .message("Get History Berhasil")
                 .data(bannerResponses)

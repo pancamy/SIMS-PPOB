@@ -29,14 +29,14 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
 
     @Override
     @Transactional
-    public PagingResponse<TransactionHistoryResponse> getAll(Users user, PagingRequest pagingRequest) {
+    public PagingResponse<List<TransactionHistoryResponse>> getAll(Users user, PagingRequest pagingRequest) {
         List<TransactionHistories> banners = transactionHistoryRepository.getAll(pagingRequest);
 
         List<TransactionHistoryResponse> transactionHistoryResponses = banners.stream()
                 .map(model::toTransactionHistoryResponse)
                 .toList();
 
-        PagingResponse pagingResponse = new PagingResponse();
+        PagingResponse<List<TransactionHistoryResponse>> pagingResponse = new PagingResponse<>();
         pagingResponse.setOffset(pagingRequest.getOffset());
         pagingResponse.setLimit(pagingRequest.getLimit());
         pagingResponse.setRecords(transactionHistoryResponses);
