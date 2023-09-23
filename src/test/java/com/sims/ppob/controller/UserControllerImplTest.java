@@ -26,21 +26,12 @@ public class UserControllerImplTest {
     @Autowired
     private RandomGenerator randomGenerator;
 
+    @Autowired
+    private UseMe useMe;
+
     @Test
     public void loginSuccess() throws Exception {
-        UserLoginRequest request = new UserLoginRequest();
-        request.setEmail("panca9090@gmail.com");
-        request.setPassword("12345678");
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(0))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").isString())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.token").isString());
+        useMe.login();
     }
 
     @Test
@@ -61,11 +52,28 @@ public class UserControllerImplTest {
     }
 
     @Test
+    public void loginUnauthorized() throws Exception {
+        UserLoginRequest request = new UserLoginRequest();
+        request.setEmail("abc@gmail.com");
+        request.setPassword("12345678");
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(108))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data").isEmpty());
+    }
+
+    @Test
     public void registerSuccess() throws Exception {
         UserRegisterRequest request = new UserRegisterRequest();
         request.setEmail(randomGenerator.randomString(5)+"@gmail.com");
-        request.setFirstName(randomGenerator.randomString(5)+"@gmail.com");
-        request.setLastName(randomGenerator.randomString(5)+"@gmail.com");
+        request.setFirstName(randomGenerator.randomString(5));
+        request.setLastName(randomGenerator.randomString(5));
         request.setPassword(randomGenerator.randomString(8));
 
         mockMvc.perform(MockMvcRequestBuilders.post("/registration")

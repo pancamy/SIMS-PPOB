@@ -1,6 +1,7 @@
 package com.sims.ppob.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sims.ppob.model.UserLoginResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -22,12 +23,21 @@ class BalanceControllerImplTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private UseMe useMe;
+
     @Test
     public void getByUserSuccess() throws Exception {
+        UserLoginResponse userLoginResponse = useMe.login();
+
         mockMvc.perform(MockMvcRequestBuilders.get("/balance")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer "))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .header("Authorization", "Bearer "+userLoginResponse.getToken()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(0))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.balance").isNumber());
     }
 }
