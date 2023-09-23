@@ -6,6 +6,7 @@ import com.sims.ppob.model.TransactionPaymentRequest;
 import com.sims.ppob.model.TransactionResponse;
 import com.sims.ppob.repository.*;
 import com.sims.ppob.utility.Model;
+import com.sims.ppob.utility.Numbering;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,14 +34,17 @@ public class TransactionServiceImpl implements TransactionService{
 
     private final Model model;
 
+    private final Numbering numbering;
+
     @Autowired
-    public TransactionServiceImpl(TransactionRepository transactionRepository, TransactionHistoryRepository transactionHistoryRepository, UserRepository userRepository, BalanceRepository balanceRepository, ServiceRepository serviceRepository, Model model) {
+    public TransactionServiceImpl(TransactionRepository transactionRepository, TransactionHistoryRepository transactionHistoryRepository, UserRepository userRepository, BalanceRepository balanceRepository, ServiceRepository serviceRepository, Model model, Numbering numbering) {
         this.transactionRepository = transactionRepository;
         this.transactionHistoryRepository = transactionHistoryRepository;
         this.userRepository = userRepository;
         this.balanceRepository = balanceRepository;
         this.serviceRepository = serviceRepository;
         this.model = model;
+        this.numbering = numbering;
     }
 
     @Override
@@ -62,10 +66,12 @@ public class TransactionServiceImpl implements TransactionService{
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Balance tidak cukup untuk pembayaran " + service.getServiceName());
         }
 
+        String invoiceNumber = numbering.InvoiceNumber();
+
         // transaction
         Transactions transaction = new Transactions();
         transaction.setId(UUID.randomUUID().toString());
-        transaction.setInvoiceNumber("TEST");
+        transaction.setInvoiceNumber(invoiceNumber);
         transaction.setTransactionType(TransactionTypes.PAYMENT.toString());
         transaction.setCreatedAt(newDate);
         transaction.setUpdatedAt(newDate);
@@ -77,7 +83,7 @@ public class TransactionServiceImpl implements TransactionService{
         // histories
         TransactionHistories transactionHistory = new TransactionHistories();
         transactionHistory.setId(UUID.randomUUID().toString());
-        transactionHistory.setInvoiceNumber("TEST");
+        transactionHistory.setInvoiceNumber(invoiceNumber);
         transactionHistory.setTransactionType(TransactionTypes.TOPUP.toString());
         transactionHistory.setDescription("Top Up balance");
         transactionHistory.setTotalAmount(balance.getBalance());
