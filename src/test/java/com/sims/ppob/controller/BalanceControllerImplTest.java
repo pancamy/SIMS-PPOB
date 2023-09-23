@@ -40,4 +40,16 @@ class BalanceControllerImplTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").isString())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.balance").isNumber());
     }
+
+    @Test
+    public void getByUserUnauthorized() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/balance")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(108))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data").isEmpty());
+    }
 }
