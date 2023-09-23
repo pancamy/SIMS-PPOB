@@ -9,4 +9,6 @@ import java.util.List;
 public interface ServiceRepository {
 
     List<Services> getAll();
+
+    Services getByStatusCode(String serviceCode);
 }

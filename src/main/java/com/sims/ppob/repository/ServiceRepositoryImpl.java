@@ -22,6 +22,10 @@ public class ServiceRepositoryImpl implements ServiceRepository{
     private static final String SELECT_ALL_SERVICES_SQL = "SELECT id, service_code, service_name, service_tariff, service_icon, created_at, updated_at"
             + " FROM services";
 
+    private static final String GET_BY_STATUS_CODE_SERVICES_SQL = "SELECT id, service_code, service_name, service_tariff, service_icon, created_at, updated_at"
+            + " FROM services"
+            + " WHERE service_code = ?";
+
     @Override
     public List<Services> getAll() {
         List<Services> services = new ArrayList<>();
@@ -49,5 +53,33 @@ public class ServiceRepositoryImpl implements ServiceRepository{
         }
 
         return services;
+    }
+
+    @Override
+    public Services getByStatusCode(String serviceCode) {
+        try (Connection connection = DbConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_STATUS_CODE_SERVICES_SQL)) {
+            preparedStatement.setString(1, serviceCode);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            Services service = new Services();
+
+            while (resultSet.next()) {
+                service.setId(resultSet.getString("id"));
+                service.setServiceCode(resultSet.getString("service_code"));
+                service.setServiceName(resultSet.getString("service_name"));
+                service.setServiceTariff(resultSet.getLong("service_tariff"));
+                service.setServiceIcon(resultSet.getString("service_icon"));
+                service.setCreatedAt(resultSet.getTimestamp("created_at").toLocalDateTime());
+                service.setUpdatedAt(resultSet.getTimestamp("updated_at").toLocalDateTime());
+            }
+
+            return service;
+        } catch (SQLException e) {
+            ExceptionRepository.printSQLException(e);
+
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 }

@@ -14,7 +14,7 @@ public class HandleException {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<WebResponse<?>> handleException(Exception ex) {
         WebResponse<?> response = WebResponse.builder()
-                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .status(126)
                 .message(ex.getMessage())
                 .build();
 

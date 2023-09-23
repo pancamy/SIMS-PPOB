@@ -57,4 +57,15 @@ public class Model {
 //                .updatedAt(transactionHistory.getUpdatedAt())
                 .build();
     }
+
+    public TransactionResponse toTransactionResponse(Transactions transaction) {
+        return TransactionResponse.builder()
+                .invoiceNumber(transaction.getInvoiceNumber())
+                .serviceCode(transaction.getServices().getServiceCode())
+                .serviceName(transaction.getServices().getServiceName())
+                .transactionType(transaction.getTransactionType())
+                .totalAmount(transaction.getBalance().getBalance())
+                .createdOn(transaction.getCreatedAt())
+                .build();
+    }
 }

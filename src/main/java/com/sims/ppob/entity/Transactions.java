@@ -23,10 +23,7 @@ public class Transactions {
     private String invoiceNumber;
 
     @Column(name = "transaction_type", nullable = false)
-    private TransactionTypes transactionType;
-
-    @Column(name = "total_amount", nullable = false)
-    private Long totalAmount;
+    private String transactionType;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -37,4 +34,12 @@ public class Transactions {
     @ManyToOne
     @JoinColumn(name = "service_id", referencedColumnName = "id")
     private Services services;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private Users user;
+
+    @ManyToOne
+    @JoinColumn(name = "balance_id", referencedColumnName = "id")
+    private Balances balance;
 }
