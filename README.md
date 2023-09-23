@@ -59,10 +59,6 @@ Method : POST
 
 Request Body :
 ```
-Kententuan request body:
-- Email valid
-- Password minimal 8 digit karakter
-
 {
     "email": "john.doe@gmail.com",
     "password": "ini_password123"
