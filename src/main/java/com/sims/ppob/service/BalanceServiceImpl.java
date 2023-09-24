@@ -9,6 +9,7 @@ import com.sims.ppob.model.BalanceTopUpAmountRequest;
 import com.sims.ppob.repository.BalanceRepository;
 import com.sims.ppob.repository.TransactionHistoryRepository;
 import com.sims.ppob.utility.Model;
+import com.sims.ppob.utility.Numbering;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +33,14 @@ public class BalanceServiceImpl implements BalanceService {
 
     private final Model model;
 
+    private final Numbering numbering;
+
     @Autowired
-    public BalanceServiceImpl(BalanceRepository balanceRepository, TransactionHistoryRepository transactionHistoryRepository, Model model) {
+    public BalanceServiceImpl(BalanceRepository balanceRepository, TransactionHistoryRepository transactionHistoryRepository, Model model, Numbering numbering) {
         this.balanceRepository = balanceRepository;
         this.transactionHistoryRepository = transactionHistoryRepository;
         this.model = model;
+        this.numbering = numbering;
     }
 
     @Override
@@ -67,7 +71,7 @@ public class BalanceServiceImpl implements BalanceService {
 
         TransactionHistories transactionHistory = new TransactionHistories();
         transactionHistory.setId(UUID.randomUUID().toString());
-        transactionHistory.setInvoiceNumber("TEST");
+        transactionHistory.setInvoiceNumber(numbering.InvoiceNumber());
         transactionHistory.setTransactionType(TransactionTypes.TOPUP.toString());
         transactionHistory.setDescription("Top Up balance");
         transactionHistory.setTotalAmount(totalAmount);
