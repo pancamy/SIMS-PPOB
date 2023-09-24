@@ -4,7 +4,153 @@ silahkan akses melalui link
 - POSTMAN (Google Drive) : https://drive.google.com/drive/folders/13Xeu77OYE_nqJydK5JXizX_KVO0yI3OX?usp=sharing
 - URL Server Project : http://simsppob.application-panca.cloud
 
-## Documentations
+##
+## Local Installation
+
+Anda hanya memerlukan docker untuk menjalankan database postgres dan migrasi otomatis table project. Silahkan sesuaika
+dengan kebutuhan project anda
+
+compose.yaml
+```
+services:
+  postgres:
+    container_name: 'postgres_sims_ppob'
+    image: 'postgres:latest'
+    environment:
+      - 'POSTGRES_DB=db_sims_ppob'
+      - 'POSTGRES_PASSWORD=abc123'
+      - 'POSTGRES_USER=postgres'
+    ports:
+      - '5432:5432'
+```
+
+Jalankan project dengan port localhost:3000, dan database postgres dengan port localhost:5432
+
+##
+## Deploy to Server VPS
+
+Aku mengasumsikan sudah memiliki server VPS menggunakan linux Ubuntu 18.09. Berikut IP server yang digunakan :
+```
+IP Address : 1xx.xxx.xxx.xxx
+Username : xxxxxx
+Password : xxxxxx
+Port : xxxx
+```
+
+### Java Version
+
+Silahkan instalasi Java, disini aku menggunakan versi 20.02 menggunakan Open JDK, anda bisa akses di website resmi open jdk.
+```
+Open JDK url : https://openjdk.org
+Lokasi penyimpanan di server : /usr/java/openjdk/jdk-20.0.2/bin/java
+```
+
+### Installasi Nginx
+
+Pastikan anda memperbarui dependencies linux
+```
+sudo apt update
+```
+
+Installasi nginx
+```
+sudo apt install nginx
+```
+
+Menjalankan nginx
+```
+sudo systemctl start nginx
+sudo systemctl enable nginx
+```
+
+### Installasi Docker Linux
+
+Set up Docker's Apt repository
+```
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl gnupg
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+```
+
+Install versi terbaru
+```
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+Testing docker sudah berhasil diinstall
+```
+sudo docker run hello-world
+```
+
+### Build file jar
+
+File jar nantinya kita akan upload ke server, anda bisa menggunakan FIlezila untuk upload ke server. Pastikan IP, username, passsword
+dan port nya sesuai dengan VPS anda
+```
+mvn clean package
+```
+
+### Setup nginx
+
+Arahkan ke directory /etc/nginx/conf.d, buatlah sebuah file dengan exstension .conf. Disini aku memberi nama simsppob.application-panca.cloud.conf
+```
+cd /etc/nginx/conf.d
+```
+```
+nano simsppob.application-panca.cloud.conf
+```
+
+Isi file nya, arahkan ke port localhost:3000, dan server_name sesuaikan dengan domain anda
+```
+server {
+    listen 80;
+    server_name simsppob.application-panca.cloud;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+### Menjalankan dengan systemd
+
+Arahkan ke directory systemd, dan buatlah sebuah file dengan exstension .service. Jalankan file jar menggunakan systemd, 
+yang perlu diketahui adalah lokasi penyimpanan file jar dan lokasi java disimpan
+```
+cd /etc/systemd/system/nama_service.service
+```
+```
+[Unit]
+Description=SIMS PPOB
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=/root/sims_ppob
+ExecStart=/usr/java/openjdk/jdk-20.0.2/bin/java -jar /root/sims_ppob/com.sims.ppob-0.0.1-SNAPSHOT.jar
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+```
+
+##
+## JSON Specification
 
 ### Registration
 
@@ -412,24 +558,3 @@ Response Body (Unauthorized) :
     "data": null
 }
 ```
-
-## Installation
-
-Anda hanya memerlukan docker untuk menjalankan database postgres dan migrasi otomatis table project. Silahkan sesuaika
-dengan kebutuhan project anda
-
-compose.yaml
-```
-services:
-  postgres:
-    container_name: 'postgres_sims_ppob'
-    image: 'postgres:latest'
-    environment:
-      - 'POSTGRES_DB=db_sims_ppob'
-      - 'POSTGRES_PASSWORD=abc123'
-      - 'POSTGRES_USER=postgres'
-    ports:
-      - '5432:5432'
-```
-
-Jalankan project dengan port localhost:3000, dan database postgres dengan port localhost:5432
