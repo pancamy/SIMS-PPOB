@@ -85,7 +85,7 @@ public class TransactionServiceImpl implements TransactionService{
         transactionHistory.setId(UUID.randomUUID().toString());
         transactionHistory.setInvoiceNumber(invoiceNumber);
         transactionHistory.setTransactionType(TransactionTypes.TOPUP.toString());
-        transactionHistory.setDescription("Top Up balance");
+        transactionHistory.setDescription(service.getServiceName());
         transactionHistory.setTotalAmount(balance.getBalance());
         transactionHistory.setCreatedAt(newDate);
         transactionHistory.setUpdatedAt(newDate);
