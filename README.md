@@ -262,6 +262,15 @@ Response Body (Success) :
 }
 ```
 
+Response Body (Conflict) :
+```
+{
+    "status": 120,
+    "message": "Status code sudah terdaftar",
+    "data": null
+}
+```
+
 Response Body (Unauthorized) :
 ```
 {
